@@ -1,0 +1,28 @@
+my_module.entity_access_policy:
+  entity_type: 'node'
+  bundle: 'article' # optional
+  grants: ['view'] # available actions are 'view, 'edit', 'create', 'delete'
+  shared_value:
+    entity: field_colors.id # selects a value from a given entity
+    user: field_colors.id   # selects a value from the current user
+  conditions:
+    entity:
+      - type: condition
+        property: status
+        value: 1
+    user: # 
+      - type: condition
+        property: roles
+        operator: contains
+        value: admin
+      - type: condition_group
+        conjunction: 'OR'
+        members:
+          - type: condition
+            property: roles
+            operator: contains
+            value: admin
+          - type: condition
+            property: roles
+            operator: contains
+            value: content editor

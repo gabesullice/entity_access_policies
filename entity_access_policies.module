@@ -1,0 +1,41 @@
+<?php
+
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\node\NodeInterface;
+use Drupal\entity_access_policies\PolicyInterface;
+use Drupal\entity_access_policies\LockInterface;
+
+function entity_access_policies_node_access_records(NodeInterface $node) {
+  $policy_manager = Drupal::service('plugin.manager.entity_access_policy');
+  /* @var \Drupal\Component\Plugin\PluginManagerInterface $policy_manager */
+
+  $grants = [];
+  $definitions = $policy_manager->getDefinitions();
+  foreach (array_keys($definitions) as $policy_id) {
+    $policy = $policy_manager->createInstance($policy_id);
+
+    if ($policy->applies($node)) {
+      $locks = $policy->getLocks($node);
+      /* @var \Drupal\entity_access_policies\LockInterface[] */
+      foreach ($locks as $lock) {
+        $grants[] = _entity_access_policies_lock_to_grant($policy_id, $lock);
+      }
+    }
+  }
+
+  return $grants;
+}
+
+function _entity_access_policies_lock_to_grant($policy_id, LockInterface $lock) {
+  $grant = [
+    'realm' => 'entity_access_policies',
+    'gid' => $policy_id . ':' . $lock->id(),
+    'langcode' => $lock->getLanguage(),
+  ];
+
+  foreach ($lock->getOperations() as $operation) {
+    $grant['grant_' . $operation] = 1;
+  }
+
+  return $grant;
+}

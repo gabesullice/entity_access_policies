@@ -1,0 +1,6 @@
+name: Entity Access Policies
+description: Attribute Based Accees Policies for Drupal Entities
+package: Access Control
+
+type: module
+core: 8.x
