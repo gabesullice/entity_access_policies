@@ -2,6 +2,9 @@
 
 namespace Drupal\entity_access_policies\Lock;
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity_access_policies\LockInterface;
+
 /**
  * Provides a base class for creating custom locks.
  */
@@ -22,6 +25,13 @@ abstract class LockBase implements LockInterface {
    */
   public function __construct(EntityInterface $entity) {
     $this->entity = $entity;
+  }
+
+  /**
+   * Creates a new Lock object.
+   */
+  public static function create(EntityInterface $entity) {
+    return new static($entity);
   }
 
   /**

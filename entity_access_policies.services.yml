@@ -1,4 +1,4 @@
 services:
   plugin.manager.entity_access_policy:
-    class: Drupal\entity_access_policy\PolicyManager
+    class: Drupal\entity_access_policies\PolicyManager
     parent: default_plugin_manager
