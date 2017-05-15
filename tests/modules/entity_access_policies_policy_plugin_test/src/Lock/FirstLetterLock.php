@@ -11,7 +11,7 @@ class FirstLetterLock extends LockBase {
    */
   public function id() {
     $label = $this->entity->label();
-    return substr($label, 0, 1);
+    return ord($label);
   }
 
   /**

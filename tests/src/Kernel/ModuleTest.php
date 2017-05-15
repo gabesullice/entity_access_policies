@@ -29,12 +29,12 @@ class ModuleTest extends KernelTestBase {
     $policy->applies(Argument::type(EntityInterface::class))->willReturn(TRUE);
     $policy->getLocks(Argument::type(EntityInterface::class))->willReturn([
       $this->getLock([
-        'id' => 'view_lock',
+        'id' => 42,
         'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
         'operations' => ['view'],
       ]),
       $this->getLock([
-        'id' => 'delete_lock',
+        'id' => 43,
         'langcode' => LanguageInterface::LANGCODE_DEFAULT,
         'operations' => ['delete'],
       ]),
@@ -56,14 +56,18 @@ class ModuleTest extends KernelTestBase {
 
     $this->assertEqual([
       [
-        'realm' => 'entity_access_policies',
-        'gid' => 'some_policy:view_lock',
+        'realm' => 'entity_access_policies:some_policy',
+        'gid' => 42,
         'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
         'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       ],
       [
-        'realm' => 'entity_access_policies',
-        'gid' => 'some_policy:delete_lock',
+        'realm' => 'entity_access_policies:some_policy',
+        'gid' => 43,
+        'grant_view' => 0,
+        'grant_update' => 0,
         'grant_delete' => 1,
         'langcode' => LanguageInterface::LANGCODE_DEFAULT,
       ],
@@ -76,8 +80,8 @@ class ModuleTest extends KernelTestBase {
 
     $policy = $this->prophesize(PolicyInterface::class);
     $policy->getKeys(Argument::type(AccountInterface::class))->willReturn([
-      'view_lock',
-      'delete_lock',
+      42,
+      43,
     ]);
 
     $policy_manager = $this->prophesize(PluginManagerInterface::class);
@@ -93,10 +97,7 @@ class ModuleTest extends KernelTestBase {
     );
 
     $this->assertEqual([
-      'entity_access_policies' => [
-        'some_policy:view_lock',
-        'some_policy:delete_lock',
-      ],
+      'entity_access_policies:some_policy' => [42, 43],
     ], $grants);
   }
 
@@ -110,9 +111,12 @@ class ModuleTest extends KernelTestBase {
   }
 
   protected function getLock($lock_data) {
+    $language = $this->prophesize(LanguageInterface::class);
+    $language->getId()->willReturn($lock_data['langcode']);
+
     $lock = $this->prophesize(LockInterface::class);
     $lock->id()->willReturn($lock_data['id']);
-    $lock->getLanguage()->willReturn($lock_data['langcode']);
+    $lock->getLanguage()->willReturn($language->reveal());
     $lock->getOperations()->willReturn($lock_data['operations']);
     return $lock->reveal();
   }
@@ -120,24 +124,27 @@ class ModuleTest extends KernelTestBase {
   public function lockToGrantProvider() {
     return [
       [[
-        'id' => 'my_lock',
+        'id' => 888,
         'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
         'operations' => ['view'],
       ], [
-        'realm' => 'entity_access_policies',
-        'gid' => 'example:my_lock',
+        'realm' => 'entity_access_policies:example',
+        'gid' => 888,
         'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
         'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       ]],
       [[
-        'id' => 'my_lock',
+        'id' => 888,
         'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-        'operations' => ['view', 'edit'],
+        'operations' => ['view', 'update'],
       ], [
-        'realm' => 'entity_access_policies',
-        'gid' => 'example:my_lock',
+        'realm' => 'entity_access_policies:example',
+        'gid' => 888,
         'grant_view' => 1,
-        'grant_edit' => 1,
+        'grant_update' => 1,
+        'grant_delete' => 0,
         'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       ]],
     ];

@@ -1,10 +1,50 @@
 <?php
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_access_policies\LockInterface;
 use Drupal\entity_access_policies\PolicyInterface;
 use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_entity_access().
+ *
+ * Shim to extend entity_access_policies to all entities. Will NOT work with
+ * listing-like content views that rely solely on node_access.
+ */
+function entity_access_policies_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $policy_manager = Drupal::service('plugin.manager.entity_access_policy');
+  /* @var \Drupal\Component\Plugin\PluginManagerInterface $policy_manager */
+
+  $definitions = $policy_manager->getDefinitions();
+
+  foreach (array_keys($definitions) as $policy_id) {
+    $policy = $policy_manager->createInstance($policy_id);
+
+    if ($policy->applies($entity)) {
+      $locks = $policy->getLocks($entity);
+      /* @var \Drupal\entity_access_policies\LockInterface[] $locks */
+
+      $filtered = array_filter($locks, function ($lock) use ($operation) {
+        return in_array($operation, $lock->getOperations());
+      });
+
+      if (!empty($filtered)) {
+        $keys = $policy->getKeys($account);
+
+        foreach ($filtered as $lock) {
+          if (in_array($lock->id(), $keys)) {
+            return AccessResult::allowed();
+          }
+        }
+      }
+    }
+  }
+
+  return AccessResult::neutral();
+}
 
 /**
  * Implements hook_node_access_records().
@@ -47,14 +87,11 @@ function entity_access_policies_node_grants(AccountInterface $account, $op) {
   $definitions = $policy_manager->getDefinitions();
   foreach (array_keys($definitions) as $policy_id) {
     $policy = $policy_manager->createInstance($policy_id);
-
-    $keys = $policy->getKeys($account);
-    foreach ($keys as $key) {
-      $grants[] = $policy_id . ':' . $key;
-    }
+    $realm = sprintf('entity_access_policies:%s', $policy_id);
+    $grants[$realm] = $policy->getKeys($account);
   }
 
-  return ['entity_access_policies' => $grants];
+  return $grants;
 }
 
 /**
@@ -65,13 +102,14 @@ function entity_access_policies_node_grants(AccountInterface $account, $op) {
  */
 function _entity_access_policies_lock_to_grant($policy_id, LockInterface $lock) {
   $grant = [
-    'realm' => 'entity_access_policies',
-    'gid' => $policy_id . ':' . $lock->id(),
-    'langcode' => $lock->getLanguage(),
+    'realm' => sprintf('entity_access_policies:%s', $policy_id),
+    'gid' => $lock->id(),
+    'langcode' => $lock->getLanguage()->getId(),
   ];
 
-  foreach ($lock->getOperations() as $operation) {
-    $grant['grant_' . $operation] = 1;
+  $allowed_operations = $lock->getOperations();
+  foreach (['view', 'update', 'delete'] as $operation) {
+    $grant['grant_' . $operation] = (int) in_array($operation, $allowed_operations);
   }
 
   return $grant;

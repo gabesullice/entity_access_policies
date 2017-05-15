@@ -45,13 +45,10 @@ abstract class LockBase implements LockInterface {
   abstract public function getOperations();
 
   /**
-   * Returns the languages for which this lock applies.
-   *
-   * @return string[]
-   *   Example: [LanguageInterface::LANGUAGE_NOT_SPECIFIED]
+   * {@inheritdoc}
    */
   public function getLanguage() {
-    return [$this->entity->language()];
+    return $this->entity->language();
   }
 
 }

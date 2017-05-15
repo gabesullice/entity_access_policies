@@ -46,7 +46,7 @@ class PolicyPluginTest extends KernelTestBase {
     $this->assertFalse($letter_policy->applies($term));
 
     $locks = $letter_policy->getLocks($node);
-    $this->assertEqual('B', $locks[0]->id());
+    $this->assertEqual(ord('B'), $locks[0]->id());
   }
 
   public function testFirstLetterPolicyPlugin_keys() {
@@ -61,8 +61,8 @@ class PolicyPluginTest extends KernelTestBase {
     $bob->getAccountName()->willReturn('Bob');
     $bob = $bob->reveal();
 
-    $this->assertEqual(['A'], $letter_policy->getKeys($alice));
-    $this->assertEqual(['B'], $letter_policy->getKeys($bob));
+    $this->assertEqual([ord('A')], $letter_policy->getKeys($alice));
+    $this->assertEqual([ord('B')], $letter_policy->getKeys($bob));
   }
 
 }

@@ -34,7 +34,7 @@ class FirstLetterPolicy extends PolicyBase {
    */
   public function getKeys(AccountInterface $account) {
     $name = $account->getAccountName();
-    return [substr($name, 0, 1)];
+    return [ord($name)];
   }
 
 }

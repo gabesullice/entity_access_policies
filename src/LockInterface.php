@@ -22,8 +22,7 @@ interface LockInterface {
   /**
    * Returns the languages for which this lock applies.
    *
-   * @return string[]
-   *   Example: [LanguageInterface::LANGUAGE_NOT_SPECIFIED]
+   * @return \Drupal\Core\Language\LanguageInterface
    */
   public function getLanguage();
 
