@@ -1,0 +1,6 @@
+name: Entity Access Policies Policy Plugin
+description: Creates a demo access policy plugin which is also used for tests.
+package: Testing
+
+type: module
+core: 8.x
