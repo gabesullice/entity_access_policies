@@ -5,6 +5,7 @@ namespace Drupal\Tests\Kernel;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_access_policies\LockInterface;
 use Drupal\entity_access_policies\PolicyInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -47,7 +48,7 @@ class NodeAccessRecordsTest extends KernelTestBase {
 
     $node = $this->prophesize(NodeInterface::class);
 
-    $grants = $this->moduleHandler->invoke(
+    $access_records = $this->moduleHandler->invoke(
       'entity_access_policies',
       'node_access_records',
       [$node->reveal()]
@@ -65,6 +66,36 @@ class NodeAccessRecordsTest extends KernelTestBase {
         'gid' => 'some_policy:delete_lock',
         'grant_delete' => 1,
         'langcode' => LanguageInterface::LANGCODE_DEFAULT,
+      ],
+    ], $access_records);
+  }
+
+  public function testNodeGrants() {
+    $account = $this->prophesize(AccountInterface::class);
+    $account = $account->reveal();
+
+    $policy = $this->prophesize(PolicyInterface::class);
+    $policy->getKeys(Argument::type(AccountInterface::class))->willReturn([
+      'view_lock',
+      'delete_lock',
+    ]);
+
+    $policy_manager = $this->prophesize(PluginManagerInterface::class);
+    $policy_manager->getDefinitions()->willReturn(['some_policy' => NULL]);
+    $policy_manager->createInstance('some_policy')->willReturn($policy->reveal());
+
+    $this->container->set('plugin.manager.entity_access_policy', $policy_manager->reveal());
+
+    $grants = $this->moduleHandler->invoke(
+      'entity_access_policies',
+      'node_grants',
+      [$account, 'view']
+    );
+
+    $this->assertEqual([
+      'entity_access_policies' => [
+        'some_policy:view_lock',
+        'some_policy:delete_lock',
       ],
     ], $grants);
   }
