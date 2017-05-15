@@ -15,7 +15,7 @@ use \Prophecy\Argument;
 /**
  * @group entity_access_policies
  */
-class NodeAccessRecordsTest extends KernelTestBase {
+class ModuleTest extends KernelTestBase {
 
   public static $modules = ['entity_access_policies'];
 
