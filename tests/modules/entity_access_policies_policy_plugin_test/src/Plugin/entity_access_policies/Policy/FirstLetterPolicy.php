@@ -3,6 +3,7 @@
 namespace Drupal\entity_access_policies_policy_plugin_test\Plugin\entity_access_policies\Policy;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_access_policies\Policy\PolicyBase;
 use Drupal\entity_access_policies_policy_plugin_test\Lock\FirstLetterLock;
 
@@ -26,6 +27,14 @@ class FirstLetterPolicy extends PolicyBase {
    */
   public function getLocks(EntityInterface $entity) {
     return [FirstLetterLock::create($entity)];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getKeys(AccountInterface $account) {
+    $name = $account->getAccountName();
+    return [substr($name, 0, 1)];
   }
 
 }

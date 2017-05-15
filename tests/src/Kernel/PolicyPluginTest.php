@@ -4,6 +4,7 @@ namespace Drupal\entity_access_policies;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
 
 class PolicyPluginTest extends KernelTestBase {
 
@@ -28,7 +29,7 @@ class PolicyPluginTest extends KernelTestBase {
     $this->assertTrue($this->policyManager->hasDefinition('FirstLetterPolicy'));
   }
 
-  public function testFirstLetterPolicyPlugin() {
+  public function testFirstLetterPolicyPlugin_locks() {
     $letter_policy = $this->policyManager->createInstance('FirstLetterPolicy');
     /* @var \Drupal\entity_access_policies\PolicyInterface $letter_policy */
 
@@ -48,5 +49,20 @@ class PolicyPluginTest extends KernelTestBase {
     $this->assertEqual('B', $locks[0]->id());
   }
 
+  public function testFirstLetterPolicyPlugin_keys() {
+    $letter_policy = $this->policyManager->createInstance('FirstLetterPolicy');
+    /* @var \Drupal\entity_access_policies\PolicyInterface $letter_policy */
+
+    $alice = $this->prophesize(AccountInterface::class);
+    $alice->getAccountName()->willReturn('Alice');
+    $alice = $alice->reveal();
+
+    $bob = $this->prophesize(AccountInterface::class);
+    $bob->getAccountName()->willReturn('Bob');
+    $bob = $bob->reveal();
+
+    $this->assertEqual(['A'], $letter_policy->getKeys($alice));
+    $this->assertEqual(['B'], $letter_policy->getKeys($bob));
+  }
 
 }
