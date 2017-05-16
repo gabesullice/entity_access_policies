@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\entity_access_policies_policy_plugin_test\Lock;
+namespace Drupal\example_policy\Lock;
 
 use Drupal\entity_access_policies\Lock\LockBase;
 

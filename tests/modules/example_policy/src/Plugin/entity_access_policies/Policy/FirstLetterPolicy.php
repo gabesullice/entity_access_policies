@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\entity_access_policies_policy_plugin_test\Plugin\entity_access_policies\Policy;
+namespace Drupal\example_policy\Plugin\entity_access_policies\Policy;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_access_policies\Policy\PolicyBase;
-use Drupal\entity_access_policies_policy_plugin_test\Lock\FirstLetterLock;
+use Drupal\example_policy\Lock\FirstLetterLock;
 
 /**
  * @Policy(
@@ -19,7 +19,7 @@ class FirstLetterPolicy extends PolicyBase {
    * {@inheritdoc}
    */
   public function applies(EntityInterface $entity) {
-    return ($entity->getEntityTypeId() == 'node');
+    return (in_array($entity->getEntityTypeId(), ['node']));
   }
 
   /**

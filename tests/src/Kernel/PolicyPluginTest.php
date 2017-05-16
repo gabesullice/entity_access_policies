@@ -17,7 +17,7 @@ class PolicyPluginTest extends KernelTestBase {
 
   public static $modules = [
     'entity_access_policies',
-    'entity_access_policies_policy_plugin_test',
+    'example_policy',
   ];
 
   public function setUp() {
