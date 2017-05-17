@@ -5,11 +5,12 @@ namespace Drupal\entity_access_policies\Policy;
 use Drupal\entity_access_policies\PolicyInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Component\Plugin\PluginBase;
 
 /**
  * Provides a base class for implementing access policies.
  */
-abstract class PolicyBase implements PolicyInterface {
+abstract class PolicyBase extends PluginBase implements PolicyInterface {
 
   /**
    * {@inheritdoc}
@@ -25,6 +26,5 @@ abstract class PolicyBase implements PolicyInterface {
    * {@inheritdoc}
    */
   abstract public function getKeys(AccountInterface $account);
-
 
 }
