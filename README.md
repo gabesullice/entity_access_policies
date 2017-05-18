@@ -90,7 +90,7 @@ class YourCustomPolicy extends PolicyBase {
    * return a list of integer IDs that correspond to the locks you want to
    * "open" from above.
    */
-  getLocks(AccountInterface $account) {
+  getKeys(AccountInterface $account) {
     if ($account->hasPermission('not_the_number_of_the_beast')) {
       return [999]; // Now, this user can open up the "lock" from above.
     }
