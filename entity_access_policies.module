@@ -39,6 +39,8 @@ function entity_access_policies_entity_access(EntityInterface $entity, $operatio
             return AccessResult::allowed();
           }
         }
+
+        return AccessResult::forbidden();
       }
     }
   }
