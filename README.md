@@ -1,17 +1,19 @@
-Entity Access Policies
-====
+# Entity Access Policies
 
 Entity Access Policies let you express fine-grained access control rules for any Drupal 8 entity type.
 
 The concept is simple. You put your entities under lock and key.
 
-# Overview
+## Overview
 
 Inspired by the `hook_node_grants` and `hook_node_access_records` system, Entity Access Policies are incredibly flexible while being much easier to understand and applicable beyond just nodes.
 
 Entity access policies are plugins, just like blocks in Drupal 8.
 
-You can define your own custom access policy with just two files. A module `info.yml` and a file at `src/Plugin/entity_access_policies/Policy/YourCustomPolicy.php`.
+You can define your own custom access policy with just two files:
+
+1. A module `info.yml`
+1. And a file at `src/Plugin/entity_access_policies/Policy/YourCustomPolicy.php`.
 
 The module directory tree would look like this:
 
@@ -25,7 +27,7 @@ custom_module/
           YourCustomPolicy.php
 ```
 
-# The Policy file
+## The Policy File
 
 The policy file is pretty simple, a policy is just a class that has three methods: `getLocks()`, getKeys()`, and `applies()`.
 
@@ -98,6 +100,8 @@ class YourCustomPolicy extends PolicyBase {
 
 }
 ```
+
+## That's Not So Simple
 
 But wait, there's more! You don't have to do _any_ of that if you don't want to. There can be other modules that make these plugins for you. One such example is the [Attribute-based Access Policies](https://github.com/gabesullice/attribute_access_policies) module. It let's you build your own policies in YAML like this:
 
