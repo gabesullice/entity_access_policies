@@ -29,7 +29,7 @@ custom_module/
 
 ## The Policy File
 
-The policy file is pretty simple, a policy is just a class that has three methods: `getLocks()`, getKeys()`, and `applies()`.
+The policy file is pretty simple, a policy is just a class that has three methods: `getLocks()`, `getKeys()`, and `applies()`.
 
 You also have to tell Drupal about your policy class with a simple annotation.
 
