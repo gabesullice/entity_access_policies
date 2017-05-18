@@ -73,7 +73,7 @@ class YourCustomPolicy extends PolicyBase {
    */
   getLocks(EntityInterface $entity) {
     $lock = DefaultLock::create(
-      888, // ID. This can be dynamic, it just has to be an integer.
+      999, // ID. This can be dynamic, it just has to be an integer.
       ['view', 'update', 'delete'], // Operations. You can do any or all of these.
       $entity->language(), // Language. We just want this to apply to the default langauge.
     );
