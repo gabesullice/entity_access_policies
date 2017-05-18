@@ -4,7 +4,7 @@ Entity Access Policies let you express fine-grained access control rules for any
 
 The concept is simple. You put your entities under lock and key.
 
-*Warning*: This is _alpha_ software. In fact, the concepts here are under active discussion on Drupal.org and some really insightful ideas are being proposed by lots of people. This is an experimental implementation that is subject to change.
+**Warning**: This is _alpha_ software. In fact, the concepts here are under [active discussion on Drupal.org](https://www.drupal.org/node/777578) and some really insightful ideas are being proposed by lots of people. This is an experimental implementation that is subject to change.
 
 ## Overview
 
