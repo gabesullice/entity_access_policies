@@ -101,9 +101,10 @@ class YourCustomPolicy extends PolicyBase {
 }
 ```
 
-## That's Not So Simple
+## "That's not as simple as I had hoped" :(
 
-But wait, there's more! You don't have to do _any_ of that if you don't want to. There can be other modules that make these plugins for you. One such example is the [Attribute-based Access Policies](https://github.com/gabesullice/attribute_access_policies) module. It let's you build your own policies in YAML like this:
+Hold on, there's more! You don't have to do _any_ of that if you don't want to.
+Other modules can make these plugins for you. One such example is the [Attribute-based Access Policies](https://github.com/gabesullice/attribute_access_policies) module. It let's you build your own policies in YAML like this:
 
 ```yaml
 id: 'first_letter_is_a'
@@ -124,3 +125,5 @@ user_condition:
 ```
 
 That would let any user whose username starts with `a`, _view_ or _delete_ any node whose title starts with `B`. I don't know why you'd want to do that, but the point is _you can_.
+
+Entity Access Policies are a new thing&trade; and there isn't a big ecosystem of other pre-made policy plugins yet. So, stake your territory. Build your own and make it configurable. Then let me know about it ;)
