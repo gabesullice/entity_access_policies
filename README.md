@@ -90,10 +90,10 @@ class YourCustomPolicy extends PolicyBase {
    */
   getLocks(AccountInterface $account) {
     if ($account->hasPermission('not_the_number_of_the_beast')) {
-      return [888]; // Now, this user can open up the "lock" from above.
+      return [999]; // Now, this user can open up the "lock" from above.
     }
 
-    // Welp, if the user didn't have the right permission, he can't open
+    // Welp, this user didn't have the right permission, so they can't open
     // anything. They don't get _any_ keys.
     return [];
   }
