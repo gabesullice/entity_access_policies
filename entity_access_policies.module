@@ -36,12 +36,12 @@ function entity_access_policies_entity_access(EntityInterface $entity, $operatio
 
         foreach ($filtered as $lock) {
           if (in_array($lock->id(), $keys)) {
-            return AccessResult::allowed();
+            return AccessResult::allowed()->cachePerUser();
           }
         }
-
-        return AccessResult::forbidden();
       }
+
+      return AccessResult::forbidden()->cachePerUser();
     }
   }
 
