@@ -2,7 +2,7 @@
 
 namespace Drupal\entity_access_policies;
 
-use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -36,7 +36,7 @@ class PolicyManager extends DefaultPluginManager {
     );
     $this->alterInfo('entity_access_policies_policy_info');
     $this->setCacheBackend($cache_backend, 'entity_access_policies_policy_info_plugins');
-    $this->factory = new DefaultFactory($this->getDiscovery());
+    $this->factory = new ContainerFactory($this->getDiscovery());
   }
 
 }
