@@ -64,7 +64,7 @@ class YourCustomPolicy extends PolicyBase {
    * bundle. This is here in case calculating your locks is really time
    * consuming.
    */
-  applies(EntityInterface $entity) {
+  public function applies(EntityInterface $entity) {
     return TRUE; // Apply this policy to all the things!
   }
 
@@ -73,7 +73,7 @@ class YourCustomPolicy extends PolicyBase {
    * user a corresponding key (ID), that user will be able to "unlock" all the
    * operations you've specified from here. You can return as 
    */
-  getLocks(EntityInterface $entity) {
+  public function getLocks(EntityInterface $entity) {
     $lock = DefaultLock::create(
       999, // ID. This can be dynamic, it just has to be an integer.
       ['view', 'update', 'delete'], // Operations. You can do any or all of these.
@@ -90,7 +90,7 @@ class YourCustomPolicy extends PolicyBase {
    * return a list of integer IDs that correspond to the locks you want to
    * "open" from above.
    */
-  getKeys(AccountInterface $account) {
+  public function getKeys(AccountInterface $account) {
     if ($account->hasPermission('not_the_number_of_the_beast')) {
       return [999]; // Now, this user can open up the "lock" from above.
     }
