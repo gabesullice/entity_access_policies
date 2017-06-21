@@ -1,0 +1,7 @@
+{
+    "name": "gabesullice/entity_access_policies",
+    "type": "drupal-module",
+    "description": "Provide custom access policies for any entity",
+    "require": {
+    }
+}
